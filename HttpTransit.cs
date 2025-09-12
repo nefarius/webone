@@ -540,7 +540,7 @@ namespace WebOne
 					operation.Method = ClientRequest.HttpMethod;
 					operation.RequestHeaders = whc;
 					operation.URL = RequestURL;
-					if(!ConfigFile.DontPreferHTTPS) operation.SecureConnection = ClientRequest.IsSecureConnection;
+					if (!ConfigFile.DontPreferHTTPS) operation.SecureConnection = ClientRequest.IsSecureConnection;
 					SendRequest(operation);
 				}
 				catch (System.Net.Http.HttpRequestException httpex)
@@ -1163,6 +1163,10 @@ namespace WebOne
 					case "/!ftp/":
 						// FTP client
 						SendInfoPage(new FtpClientGUI(ClientRequest).GetPage());
+						return;
+					case "/!redirect":
+					case "/!redirect/":
+						SendInfoPage(new RedirectorInfoPage(HttpUtility.ParseQueryString(ClientRequest.Url.Query)));
 						return;
 					case "/!ca":
 					case "/!ca/":
