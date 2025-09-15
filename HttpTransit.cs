@@ -493,7 +493,13 @@ namespace WebOne
 									case "AddHeader":
 										string Header = ProcessUriMasks(Edit.Value);
 										Dump("~Add request header: " + Header);
-										if (whc[Edit.Value.Substring(0, Edit.Value.IndexOf(": "))] == null) whc.Add(Header);
+										if (whc[Edit.Value.Substring(0, Edit.Value.IndexOf(": "))] == null)
+										{ whc.Add(Header); }
+										else
+										{
+											whc.Remove(Edit.Value.Substring(0, Edit.Value.IndexOf(": ")));
+											whc.Add(Header);
+										}
 										break;
 									case "AddRequestHeaderFindReplace":
 										FindReplaceEditSetRule hdr_rule = (FindReplaceEditSetRule)Edit;
