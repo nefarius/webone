@@ -1,4 +1,4 @@
-2025.05.22
+2025.09.05
 Usage: yt-dlp [OPTIONS] URL [URL...]
 
 Options:
@@ -364,9 +364,9 @@ Options:
     --no-part                       Do not use .part files - write directly into
                                     output file
     --mtime                         Use the Last-modified header to set the file
-                                    modification time (default)
+                                    modification time
     --no-mtime                      Do not use the Last-modified header to set
-                                    the file modification time
+                                    the file modification time (default)
     --write-description             Write video description to a .description
                                     file
     --no-write-description          Do not write video description (default)
