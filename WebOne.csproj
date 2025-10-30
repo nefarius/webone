@@ -3,10 +3,10 @@
 	<PropertyGroup>
 		<AssemblyName>webone</AssemblyName>
 		<OutputType>Exe</OutputType>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<Authors>Alexander Tauenis</Authors>
-		<Version>0.17.6</Version>
-		<VersionSuffix></VersionSuffix> <!--<VersionSuffix>-pre</VersionSuffix>-->
+		<Version>0.18.0</Version>
+		<VersionSuffix>-pre</VersionSuffix> <!--<VersionSuffix>-pre</VersionSuffix>-->
 		<PackageVersion>$(Version)$(VersionSuffix)</PackageVersion>
 		<Company>World</Company>
 		<Product>WebOne HTTP Proxy Server</Product>
@@ -72,9 +72,9 @@
 
 	<ItemGroup Condition="$(SelfContained)==false">
 		<DebDotNetDependencies Remove="@(DebDotNetDependencies)" />
-		<DebDotNetDependencies Include="dotnet-runtime-6.0" />
+		<DebDotNetDependencies Include="dotnet-runtime-8.0" />
 		<RpmDotNetDependency Remove="@(RpmDotNetDependency)" />
-		<RpmDotNetDependency Include="dotnet-runtime-6.0" />
+		<RpmDotNetDependency Include="dotnet-runtime-8.0" />
 	</ItemGroup>
 
 	<ItemGroup>
