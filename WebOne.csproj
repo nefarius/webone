@@ -78,7 +78,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<DebDependency Include="imagemagick-6.q16" />
+		<DebDependency Include="imagemagick-7.q16 | imagemagick-6.q16" />
 		<DebRecommends Include="ffmpeg" />
 		<DebRecommends Include="yt-dlp" />
 	</ItemGroup>
