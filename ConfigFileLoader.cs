@@ -594,6 +594,12 @@ namespace WebOne
 							}
 						}
 						break;
+					case "SslPassThrough":
+						foreach (ConfigFileOption Line in Section.Options)
+						{
+							ConfigFile.SslPassThrough.Add(Line.RawString.ToLowerInvariant());
+						}
+						break;
 					case "Http10Only":
 						foreach (ConfigFileOption Line in Section.Options)
 						{
