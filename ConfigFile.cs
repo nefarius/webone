@@ -341,7 +341,7 @@ namespace WebOne
 		/// <summary>
 		/// List of TLS/SSL/HTTPS servers for which any traffic edits must not be applied
 		/// </summary>
-		public static List<string> SslPassThrough = new();
+		public static List<string> ConnectPassThrough = new();
 
 
 

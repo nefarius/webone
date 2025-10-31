@@ -143,7 +143,7 @@ namespace WebOne
 						}
 
 						//check for pass-through mode
-						if (CheckStringRegExp(ConfigFile.SslPassThrough.ToArray(), ClientRequest.RawUrl))
+						if (CheckStringRegExp(ConfigFile.ConnectPassThrough.ToArray(), ClientRequest.RawUrl))
 						{
 							new HttpSecurePassthroughServer(ClientRequest, ClientResponse, Log).Accept();
 							return;
