@@ -343,6 +343,11 @@ namespace WebOne
 		/// </summary>
 		public static List<string> ConnectPassThrough = new();
 
+		/// <summary>
+		/// List of non-HTTPS servers with TLS, which can be accessed via CONNECT method by non-SSL-capable clients
+		/// </summary>
+		public static Dictionary<string, string> NonHttpSslDecrypt = new();
+
 
 
 		// Hint: All parser-related stuff known from v0.2.0 - 0.10.7 has been rewritten and moved to ConfigFileLoader class.

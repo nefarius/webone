@@ -149,6 +149,13 @@ namespace WebOne
 							return;
 						}
 
+						//check for SSL full decrypt mode
+						if (ConfigFile.NonHttpSslDecrypt.ContainsKey(ClientRequest.RawUrl))
+						{
+							new HttpSecureNonHttpDecryptServer(ClientRequest, ClientResponse, ConfigFile.NonHttpSslDecrypt[ClientRequest.RawUrl], Log).Accept();
+							return;
+						}
+
 						//work as HTTPS proxy
 						if (ClientRequest.RawUrl.EndsWith(":443"))
 						{
