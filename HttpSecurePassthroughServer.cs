@@ -3,11 +3,11 @@ using System.IO;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
-/// <summary>
-/// CONNECT Proxy Server for all protocols tunneling without SSL certificate spoof
-/// </summary>
 namespace WebOne
 {
+	/// <summary>
+	/// CONNECT Proxy Server for all protocols tunneling without SSL certificate spoof
+	/// </summary>
 	class HttpSecurePassthroughServer
 	{
 		Stream ClientStream;
@@ -38,6 +38,22 @@ namespace WebOne
 		/// </summary>
 		public void Accept()
 		{
+			// Check for unwanted usage
+			if (PortNo != 443 && !ConfigFile.AllowNonHttpsCONNECT)
+			{
+				// Reject connection request
+				string OnlyHTTPS = "This proxy is performing only HTTP and HTTPS tunneling.";
+				ResponseReal.ProtocolVersion = new Version(1, 1);
+				ResponseReal.StatusCode = 502;
+				ResponseReal.ContentType = "text/plain";
+				ResponseReal.ContentLength64 = OnlyHTTPS.Length;
+				ResponseReal.SendHeaders();
+				ResponseReal.OutputStream.Write(System.Text.Encoding.Default.GetBytes(OnlyHTTPS), 0, OnlyHTTPS.Length);
+				ResponseReal.Close();
+				Logger.WriteLine("<Not a HTTPS CONNECT, goodbye.");
+				return;
+			}
+
 			// Answer that this proxy supports CONNECT method
 			ResponseReal.ProtocolVersion = new Version(1, 1);
 			ResponseReal.StatusCode = 200;

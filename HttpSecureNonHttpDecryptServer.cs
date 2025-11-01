@@ -40,12 +40,29 @@ namespace WebOne
 		/// </summary>
 		public void Accept()
 		{
-			// Answer that this proxy supports CONNECT method
-			ResponseReal.ProtocolVersion = new Version(1, 1);
-			ResponseReal.StatusCode = 200;
-			ResponseReal.StatusMessage = " Connection established";
-			ResponseReal.SendHeaders(); //"HTTP/1.1 200 Connection established"
-			Logger.WriteLine(">Decrypt: {0}:{1}", HostName, PortNo);
+			if (ConfigFile.AllowNonHttpsCONNECT)
+			{
+				// Answer that this proxy supports CONNECT method
+				ResponseReal.ProtocolVersion = new Version(1, 1);
+				ResponseReal.StatusCode = 200;
+				ResponseReal.StatusMessage = " Connection established";
+				ResponseReal.SendHeaders(); //"HTTP/1.1 200 Connection established"
+				Logger.WriteLine(">Decrypt: {0}:{1}", HostName, PortNo);
+			}
+			else
+			{
+				// Reject connection request
+				string OnlyHTTPS = "This proxy is performing only HTTP and HTTPS tunneling.";
+				ResponseReal.ProtocolVersion = new Version(1, 1);
+				ResponseReal.StatusCode = 502;
+				ResponseReal.ContentType = "text/plain";
+				ResponseReal.ContentLength64 = OnlyHTTPS.Length;
+				ResponseReal.SendHeaders();
+				ResponseReal.OutputStream.Write(System.Text.Encoding.Default.GetBytes(OnlyHTTPS), 0, OnlyHTTPS.Length);
+				ResponseReal.Close();
+				Logger.WriteLine("<Not a HTTPS CONNECT, goodbye.");
+				return;
+			}
 
 			// Establish tunnel
 			TcpClient TunnelToRemote = new();

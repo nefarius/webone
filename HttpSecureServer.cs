@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Net.Security;
-using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using static WebOne.Program;
 
@@ -54,9 +53,12 @@ namespace WebOne
 				string Html =
 				"<HTML><HEAD>" +
 				"<TITLE>WebOne: SSL is not supported</TITLE></HEAD>" +
-				"<BODY><P><BIG>Sorry, Secure traffic transfer is disabled on proxy server.</BIG></P>" +
-				"<P>Set <B>SslEnable</B> to <B>yes</B> in configuration file to allow work with HTTPS &amp; SSL. Also make sure that CA files are accessible.</P>"+
-				"<P>Or set the proxy usage only for HTTP protocol in your Web-browser settings.</P>" + GetInfoString() + "</BODY></HTML>";
+				"<BODY><P>Incoming HTTPS connections support is disabled on this server.</P>" + GetInfoString() + "</BODY></HTML>";
+
+				if (File.Exists(ConfigFile.ContentDirectory + "/Err-SslDisabled.htm"))
+				{
+					Html = File.ReadAllText(ConfigFile.ContentDirectory + "/Err-SslDisabled.htm");
+				}
 
 				byte[] Buffer = (System.Text.Encoding.Default).GetBytes(Html);
 				try
@@ -96,7 +98,7 @@ namespace WebOne
 
 				ClientStreamTunnel = new SslStream(ClientStreamReal, false);
 				ClientStreamTunnel.AuthenticateAsServer(ClientStreamTunnelOptions);
-				
+
 
 				/* Result:
 				 * Ssl2 with Rc4 128-bit, Md5 128-bit
