@@ -594,6 +594,29 @@ namespace WebOne
 							}
 						}
 						break;
+					case "NonHttpSslDecrypt":
+						foreach (ConfigFileOption Line in Section.Options)
+						{
+							if (Line.HaveKeyValue
+							&& Line.Value.Split(':').Length == 2
+							&& !string.IsNullOrWhiteSpace(Line.Value.Split(':')[0])
+							&& int.TryParse(Line.Value.Split(':')[1], out int devnull))
+							{
+								ConfigFile.NonHttpSslDecrypt.Add(Line.Key, Line.Value);
+							}
+							else
+							{
+								Log.WriteLine(true, false, "Warning: Incorrect non-HTTPS with SSL/TLS decryption connection redirect rule at {0}.", Line.Location);
+								continue;
+							}
+						}
+						break;
+					case "ConnectPassThrough":
+						foreach (ConfigFileOption Line in Section.Options)
+						{
+							ConfigFile.ConnectPassThrough.Add(Line.RawString.ToLowerInvariant());
+						}
+						break;
 					case "Http10Only":
 						foreach (ConfigFileOption Line in Section.Options)
 						{

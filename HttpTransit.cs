@@ -141,6 +141,21 @@ namespace WebOne
 							SendError(400, "Invalid request. Correct format is <pre>CONNECT example.com:443 HTTP/1.1</pre>");
 							return;
 						}
+
+						//check for pass-through mode
+						if (CheckStringRegExp(ConfigFile.ConnectPassThrough.ToArray(), ClientRequest.RawUrl))
+						{
+							new HttpSecurePassthroughServer(ClientRequest, ClientResponse, Log).Accept();
+							return;
+						}
+
+						//check for SSL full decrypt mode
+						if (ConfigFile.NonHttpSslDecrypt.ContainsKey(ClientRequest.RawUrl))
+						{
+							new HttpSecureNonHttpDecryptServer(ClientRequest, ClientResponse, ConfigFile.NonHttpSslDecrypt[ClientRequest.RawUrl], Log).Accept();
+							return;
+						}
+
 						//work as HTTPS proxy
 						if (ClientRequest.RawUrl.EndsWith(":443"))
 						{

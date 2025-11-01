@@ -1,4 +1,4 @@
-@echo WebOne build script	28.11.2023
+@echo WebOne build script	30.10.2025
 @echo.
 
 @echo Clean up directories:
@@ -28,7 +28,7 @@ dotnet publish -c Release -r osx-x64 -t:CreateZip,Clean
 dotnet publish -c Release -r osx-arm64 -t:CreateZip,Clean
 dotnet publish -c Release -r win-x86 -t:CreateZip,Clean
 dotnet publish -c ReleaseSC -r win-x86 -t:CreateZip,Clean
-dotnet publish -c Release -r win-arm -t:CreateZip,Clean
+dotnet publish -c Release -r win-arm64 -t:CreateZip,Clean
 dotnet publish -c Release -r win-x64 -t:CreateZip,Clean
 @rem Win32 build must be last because else VS debugging will be broken.
 @echo.
@@ -57,6 +57,6 @@ dotnet deb install
 
 :NoNetSDK
 @echo ERROR:
-@echo You need to have Microsoft .NET SDK 6 or Microsoft Visual Studio 2022+.
-@echo Download it here: https://dotnet.microsoft.com/en-us/download/dotnet/6.0
-@echo          or here: https://visualstudio.microsoft.com/ru/vs/community/
+@echo You need to have Microsoft .NET SDK 8 or Microsoft Visual Studio 2022+.
+@echo Download it here: https://dotnet.microsoft.com/en-us/download/dotnet/8.0
+@echo          or here: https://visualstudio.microsoft.com/en/vs/community/

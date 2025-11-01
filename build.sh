@@ -7,5 +7,5 @@ dotnet publish -c Release -r osx-x64 -t:CreateZip,Clean
 dotnet publish -c Release -r osx-arm64 -t:CreateZip,Clean
 dotnet publish -c Release -r win-x86 -t:CreateZip,Clean
 dotnet publish -c ReleaseSC -r win-x86 -t:CreateZip,Clean
-dotnet publish -c Release -r win-arm -t:CreateZip,Clean
+dotnet publish -c Release -r win-arm64 -t:CreateZip,Clean
 dotnet publish -c Release -r win-x64 -t:CreateZip,Clean
