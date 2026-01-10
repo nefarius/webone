@@ -59,6 +59,32 @@ The program is built using Microsoft .NET 8.0 SDK and [dotnet-packaging](https:/
 
 Windows developers can utilize `build.bat` script for cross-platform building. And there is similar `build.sh` script for Linux and macOS environments.
 
+## Docker
+The Dockerfile builds a self-contained Linux x64 binary and bundles runtime dependencies (ImageMagick, ffmpeg, yt-dlp).
+
+Build the image:
+```
+docker build -t webone:local .
+```
+
+Run the proxy (listening on port 8080):
+```
+docker run --rm -p 8080:8080 webone:local
+```
+
+Persist SSL keys and custom configuration by mounting `/etc/webone.conf.d` (this directory overrides the base `webone.conf`):
+```
+docker run --rm -p 8080:8080 \\
+  -v $(pwd)/webone.conf.d:/etc/webone.conf.d \\
+  -v $(pwd)/webone.log:/var/log/webone.log \\
+  webone:local
+```
+
+To use a custom config file, put it into `/etc/webone.conf.d` (e.g. `my.conf`) or pass it explicitly:
+```
+docker run --rm -p 8080:8080 webone:local /etc/webone.conf
+```
+
 ## Feedback
 Any questions can be written on official [VOGONS thread](https://www.vogons.org/viewtopic.php?f=24&t=67165), [phantom.sannata.ru thread](https://phantom.sannata.org/viewtopic.php?f=16&t=33291), and GitHub [Issues](https://github.com/atauenis/webone/issues) and [Discussions](https://github.com/atauenis/webone/discussions) tabs.
 
