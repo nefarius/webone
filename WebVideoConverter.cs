@@ -470,7 +470,7 @@ namespace WebOne
 						case "v":
 						case "w":
 						case "x":
-							YoutubeDlArgs += string.Format("--{0} {1}", Arg.Key, Arg.Value);
+							YoutubeDlArgs += string.Format("--{0} {1} ", Arg.Key, Arg.Value);
 							continue;
 						//Keys: Youtube-Dl (JSON output)
 						case "j":
@@ -478,7 +478,7 @@ namespace WebOne
 						case "dump-json":
 						case "dump-single-json":
 						case "print-json":
-							YoutubeDlArgs += string.Format(" --{0} {1}", Arg.Key, Arg.Value);
+							YoutubeDlArgs += string.Format(" --{0} {1} ", Arg.Key, Arg.Value);
 							UseFFmpeg = false;
 							GetYoutubeJson = true;
 							continue;
@@ -533,7 +533,7 @@ namespace WebOne
 						case "canvas_size":
 						case "spre":
 						case "f":
-							FFmpegArgs += string.Format(" -{0} {1}", Arg.Key, Arg.Value);
+							FFmpegArgs += string.Format(" -{0} {1} ", Arg.Key, Arg.Value);
 							continue;
 						//Keys: FFmpeg (other)
 						case "vf":
