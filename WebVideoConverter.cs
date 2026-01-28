@@ -134,9 +134,11 @@ namespace WebOne
 					}
 					switch (Arg.Key.ToLowerInvariant())
 					{
+						//Key: Enable or disable ROVP
 						case "enable":
 							if (!ToBoolean(Arg.Value)) throw new Exception("This feature is disabled by administrator.");
 							continue;
+						//Keys: Common
 						case "url":
 						case "content-type":
 						case "filename":
@@ -148,74 +150,329 @@ namespace WebOne
 						case "noffmpeg":
 							UseFFmpeg = !ToBoolean(Arg.Value);
 							continue;
+						//Keys: Youtube-dl
+						/* 
+						 * From:							yt-dlp.exe --help
+						 * Finding regex mask:				\-[a-zA-Z]+
+						 * Then "\n" replacement mask:		":\ncase "
+						 * Then remove duplicates (AkelPad can).
+						 * Then remove all keys with:		"--write".
+						 * Then remove all keys with:		"force-write".
+						 * Then remove all keys with:		"force-overwrites".
+						 * Then remove all keys with:		"update".
+						 * Then remove the key:				"U".
+						 * May be other cleanup???
+						 * Then remove dashes:				"--", "-"
+						 * Then sort lines:					A -> Z
+						 * Then Visual Studio will suggest lines to remove.
+						 * Need to update for each release!
+						 */
 						case "abort-on-error":
-						case "ignore-config":
-						case "mark-watched":
-						case "no-mark-watched":
-						case "proxy":
-						case "socket-timeout":
-						case "source-address":
-						case "4":
-						case "6":
-						case "geo-verification-proxy":
-						case "geo-bypass":
-						case "no-geo-bypass":
-						case "geo-bypass-country":
-						case "geo-bypass-ip-block":
-						case "include-ads":
-						case "limit-rate":
-						case "retries":
-						case "fragment-retries":
-						case "skip-unavailable-fragments":
-						case "abort-on-unavailable-fragment":
-						case "keep-fragments":
-						case "buffer-size":
-						case "no-resize-buffer":
-						case "http-chunk-size":
-						case "xattr-set-filesize ":
-						case "hls-prefer-native":
-						case "hls-prefer-ffmpeg":
-						case "hls-use-mpegts":
-						case "external-downloader":
-						case "external-downloader-args":
-						case "cookies":
-						case "no-cache-dir":
-						case "newline":
-						case "no-progress":
-						case "no-check-certificate":
-						case "prefer-insecure":
-						case "user-agent":
-						case "referer":
-						case "add-header":
-						case "bidi-workaround":
-						case "sleep-interval":
-						case "max-sleep-interval":
-						case "format":
-						case "youtube-skip-dash-manifest":
-						case "merge-output-format":
-						case "username":
-						case "password":
-						case "twofactor":
-						case "video-password":
+						case "abort-on-unavailable-fragments":
+						case "add-chapters":
+						case "add-headers":
+						case "add-metadata":
+						case "age-limit":
+						case "alias":
+						case "allow-dynamic-mpd":
+						case "ap-list-mso":
 						case "ap-mso":
-						case "ap-username":
 						case "ap-password":
-						case "extract-audio":
+						case "ap-username":
 						case "audio-format":
+						case "audio-multistreams":
 						case "audio-quality":
-						case "recode-video":
-						case "postprocessor-args":
+						case "batch-file":
+						case "bidi-workaround":
+						case "break-match-filters":
+						case "break-on-existing":
+						case "break-per-input":
+						case "buffer-size":
+						case "cache-dir":
+						case "check-all-formats":
+						case "check-formats":
+						case "clean-info-json":
+						case "client-certificate":
+						case "client-certificate-key":
+						case "client-certificate-password":
+						case "color":
+						case "compat-options":
+						case "concat-playlist":
+						case "concurrent-fragments":
+						case "config-locations":
+						case "console-title":
+						case "continue":
+						case "convert-":
+						case "convert-subs":
+						case "convert-thumbnails":
+						case "cookies":
+						case "cookies-from-browser":
+						case "date":
+						case "dateafter":
+						case "datebefore":
+						case "default-search":
+						case "download-archive":
+						case "download-sections":
+						case "downloader":
+						case "downloader-args":
+						case "dump-pages":
+						case "embed-chapters":
+						case "embed-info-json":
+						case "embed-metadata":
 						case "embed-subs":
 						case "embed-thumbnail":
-						case "add-metadata":
-						case "metadata-from-title":
-						case "xattrs":
+						case "enable-file-urls":
+						case "encoding":
+						case "exec":
+						case "external-downloader":
+						case "external-downloader-args":
+						case "extract-audio":
+						case "extractor-args":
+						case "extractor-descriptions":
+						case "extractor-retries":
+						case "ffmpeg-location":
+						case "file-access-retries":
 						case "fixup":
-						case "prefer-avconv":
-						case "prefer-ffmpeg":
-						case "convert-subs":
-							YoutubeDlArgs += string.Format(" --{0} {1}", Arg.Key, Arg.Value);
+						case "flat-playlist":
+						case "force-download-archive":
+						case "force-ipv":
+						case "force-keyframes-at-cuts":
+						case "format":
+						case "format-sort":
+						case "format-sort-force":
+						case "fragment-retries":
+						case "geo-verification-proxy":
+						case "get-audio":
+						case "get-comments":
+						case "help":
+						case "hls-split-discontinuity":
+						case "hls-use-mpegts":
+						case "http-chunk-size":
+						case "ies":
+						case "ignore-config":
+						case "ignore-dynamic-mpd":
+						case "ignore-errors":
+						case "ignore-no-formats-error":
+						case "impersonate":
+						case "js-runtimes":
+						case "keep-fragments":
+						case "keep-video":
+						case "lazy-playlist":
+						case "legacy-server-connect":
+						case "limit-rate":
+						case "list-extractors":
+						case "list-formats":
+						case "list-impersonate-targets":
+						case "list-subs":
+						case "list-thumbnails":
+						case "live-from-start":
+						case "load-info-json":
+						case "mark-watched":
+						case "match-filters":
+						case "max-downloads":
+						case "max-filesize":
+						case "max-sleep-interval":
+						case "merge-output-format":
+						case "min-filesize":
+						case "min-sleep-interval":
+						case "mtime":
+						case "netrc":
+						case "netrc-cmd":
+						case "netrc-location":
+						case "newline":
+						case "no-abort-on-error":
+						case "no-abort-on-unavailable-fragments":
+						case "no-add-chapters":
+						case "no-add-metadata":
+						case "no-allow-dynamic-mpd":
+						case "no-audio-multistreams":
+						case "no-batch-file":
+						case "no-break-match-filters":
+						case "no-break-on-existing":
+						case "no-break-per-input":
+						case "no-cache-dir":
+						case "no-check-certificates":
+						case "no-check-formats":
+						case "no-clean-info-json":
+						case "no-config":
+						case "no-config-locations":
+						case "no-continue":
+						case "no-cookies":
+						case "no-cookies-from-browser":
+						case "no-download":
+						case "no-download-archive":
+						case "no-embed-chapters":
+						case "no-embed-info-json":
+						case "no-embed-metadata":
+						case "no-embed-subs":
+						case "no-embed-thumbnail":
+						case "no-exec":
+						case "no-flat-playlist":
+						case "no-force-keyframes-at-cuts":
+						case "no-force-overwrites":
+						case "no-format-sort-force":
+						case "no-get-comments":
+						case "no-hls-split-discontinuity":
+						case "no-hls-use-mpegts":
+						case "no-ignore-dynamic-mpd":
+						case "no-ignore-errors":
+						case "no-ignore-no-formats-error":
+						case "no-js-":
+						case "no-js-runtimes":
+						case "no-keep-fragments":
+						case "no-keep-video":
+						case "no-lazy-playlist":
+						case "no-live-from-start":
+						case "no-mark-watched":
+						case "no-match-filters":
+						case "no-mtime":
+						case "no-overwrites":
+						case "no-part":
+						case "no-playlist":
+						case "no-plugin-dirs":
+						case "no-post-overwrites":
+						case "no-prefer-free-formats":
+						case "no-progress":
+						case "no-quiet":
+						case "no-remote-components":
+						case "no-remove-chapters":
+						case "no-resize-buffer":
+						case "no-restrict-filenames":
+						case "no-simulate":
+						case "no-skip-unavailable-fragments":
+						case "no-split-chapters":
+						case "no-sponsorblock":
+						case "no-update":
+						case "no-video-multistreams":
+						case "no-wait-for-video":
+						case "no-warnings":
+						case "no-windows-filenames":
+						case "no-write-auto-subs":
+						case "no-write-automatic-subs":
+						case "no-write-comments":
+						case "no-write-description":
+						case "no-write-info-json":
+						case "no-write-playlist-metafiles":
+						case "no-write-subs":
+						case "no-write-thumbnail":
+						case "output":
+						case "output-na-placeholder":
+						case "parse-metadata":
+						case "part":
+						case "password":
+						case "paths":
+						case "playlist-items":
+						case "playlist-random":
+						case "playlist-reverse":
+						case "plugin-dirs":
+						case "postprocessor-args":
+						case "ppa":
+						case "prefer-free-formats":
+						case "prefer-insecure":
+						case "preset-alias":
+						case "print":
+						case "print-to-file":
+						case "print-traffic":
+						case "progress":
+						case "progress-delta":
+						case "progress-template":
+						case "proxy":
+						case "quiet":
+						case "recode-video":
+						case "remote-components":
+						case "remove-chapters":
+						case "remux-video":
+						case "replace-in-metadata":
+						case "resize-buffer":
+						case "restrict-filenames":
+						case "retries":
+						case "retry-sleep":
+						case "rm-cache-dir":
+						case "S-force":
+						case "simulate":
+						case "skip-download":
+						case "skip-playlist-after-errors":
+						case "skip-unavailable-fragments":
+						case "sleep-interval":
+						case "sleep-requests":
+						case "sleep-subtitles":
+						case "socket-timeout":
+						case "source-address":
+						case "split-chapters":
+						case "sponsorblock-api":
+						case "sponsorblock-chapter-title":
+						case "sponsorblock-mark":
+						case "sponsorblock-remove":
+						case "sub-":
+						case "sub-format":
+						case "sub-langs":
+						case "throttled-rate":
+						case "trim-filenames":
+						case "twofactor":
+						case "use-extractors":
+						case "use-postprocessor":
+						case "username":
+						case "verbose":
+						case "version":
+						case "video-multistreams":
+						case "video-password":
+						case "wait-for-video":
+						case "windows-filenames":
+						case "xattrs":
+						case "xff":
+						case "yes-playlist":
+						case "a":
+						case "audio":
+						case "based":
+						case "c":
+						case "compatible":
+						case "dl":
+						case "dlc":
+						case "dlp-ejs":
+						case "encode":
+						case "extracted":
+						case "factor":
+						case "filler":
+						case "Forwarded-For":
+						case "free":
+						case "generated":
+						case "generic":
+						case "h":
+						case "i":
+						case "inf":
+						case "k":
+						case "language":
+						case "letter":
+						case "live":
+						case "MAX":
+						case "modified":
+						case "n":
+						case "o":
+						case "only":
+						case "P":
+						case "preview":
+						case "processed":
+						case "Processing":
+						case "q":
+						case "R":
+						case "range":
+						case "restricted":
+						case "restriction":
+						case "S":
+						case "sensitive":
+						case "separated":
+						case "side":
+						case "specific":
+						case "STOP":
+						case "system":
+						case "title":
+						case "tty":
+						case "v":
+						case "w":
+						case "x":
+							YoutubeDlArgs += string.Format("--{0} {1}", Arg.Key, Arg.Value);
 							continue;
+						//Keys: Youtube-Dl (JSON output)
 						case "j":
 						case "J":
 						case "dump-json":
@@ -225,6 +482,7 @@ namespace WebOne
 							UseFFmpeg = false;
 							GetYoutubeJson = true;
 							continue;
+						//Keys: FFmpeg
 						case "loglevel":
 						case "max_alloc":
 						case "filter_threads":
@@ -277,11 +535,13 @@ namespace WebOne
 						case "f":
 							FFmpegArgs += string.Format(" -{0} {1}", Arg.Key, Arg.Value);
 							continue;
+						//Keys: FFmpeg (other)
 						case "vf":
 						case "af":
 						case "filter":
 							//ffmpeg filters parsed above
 							continue;
+						//Unknown or blacklisted keys. Don't process.
 						default:
 							Log.WriteLine(" Unsupported argument: {0}", Arg.Key);
 							continue;
