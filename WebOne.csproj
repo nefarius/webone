@@ -5,8 +5,8 @@
 		<OutputType>Exe</OutputType>
 		<TargetFramework>net8.0</TargetFramework>
 		<Authors>Alexander Tauenis</Authors>
-		<Version>0.18.0</Version>
-		<VersionSuffix></VersionSuffix> <!--<VersionSuffix>-pre</VersionSuffix>-->
+		<Version>0.18.1</Version>
+		<VersionSuffix>-pre</VersionSuffix> <!--<VersionSuffix>-pre</VersionSuffix>-->
 		<PackageVersion>$(Version)$(VersionSuffix)</PackageVersion>
 		<Company>World</Company>
 		<Product>WebOne HTTP Proxy Server</Product>
@@ -81,6 +81,7 @@
 		<DebDependency Include="imagemagick-7.q16 | imagemagick-6.q16" />
 		<DebRecommends Include="ffmpeg" />
 		<DebRecommends Include="yt-dlp" />
+		<DebRecommends Include="deno | nodejs | quickjs" />
 	</ItemGroup>
 
 	<ItemGroup>
