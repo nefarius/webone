@@ -86,62 +86,50 @@ namespace WebOne
 			}
 
 			// Do routing
-			bool TunnelAlive = true;
-			try
-			{
-				BinaryReader BRclient = new(ClientStream);
-				BinaryWriter BWclient = new(ClientStream);
-				BinaryReader BRremote = new(RemoteStream);
-				BinaryWriter BWremote = new(RemoteStream);
+			bool tunnelAlive = true;
+			byte[] clientBuffer = new byte[8192];
+			byte[] remoteBuffer = new byte[8192];
 
-				new Task(() =>
+			// Forward data from client to remote
+			var clientToRemote = Task.Run(() =>
+			{
+				try
 				{
-					try
+					int bytesRead;
+					while (tunnelAlive && (bytesRead = ClientStream.Read(clientBuffer, 0, clientBuffer.Length)) > 0)
 					{
-						while (true)
-						{
-							BWremote.Write(BRclient.ReadByte());
-						}
+						RemoteStream.Write(clientBuffer, 0, bytesRead);
+						RemoteStream.Flush();
 					}
-					catch { TunnelAlive = false; }
-				}).Start();
+				}
+				catch { }
+				tunnelAlive = false;
+			});
 
-				new Task(() =>
+			// Forward data from remote to client
+			var remoteToClient = Task.Run(() =>
+			{
+				try
 				{
-					try
+					int bytesRead;
+					while (tunnelAlive && (bytesRead = RemoteStream.Read(remoteBuffer, 0, remoteBuffer.Length)) > 0)
 					{
-						while (true)
-						{
-							BWclient.Write(BRremote.ReadByte());
-						}
+						ClientStream.Write(remoteBuffer, 0, bytesRead);
+						ClientStream.Flush();
 					}
-					catch { TunnelAlive = false; }
-				}).Start();
-			}
-			catch (Exception ex)
-			{
-				Logger.WriteLine(" D tunnel error: {0}. Closing.", ex.ToString());
-				TunnelAlive = false;
-			};
+				}
+				catch { }
+				tunnelAlive = false;
+			});
 
-			// Wait while connecion is alive
-			while (TunnelAlive)
-			{
-				System.Threading.Thread.Sleep(1000);
-				TunnelAlive = (ClientStream as NetworkStream).Socket.Connected;
-			};
+			// Wait while connection is alive
+			Task.WhenAny(clientToRemote, remoteToClient).Wait();
+			tunnelAlive = false;
 
 			// All done, close
-			if (TunnelToRemote.Connected)
-			{
-				TunnelToRemote.Close();
-				Logger.WriteLine(" D connection to {0} closed.", RequestReal.RawUrl);
-			}
-			else Logger.WriteLine(" D connection to {0} lost.", RequestReal.RawUrl);
-			ClientStream.Close();
-
-			return;
-
+			try { TunnelToRemote.Close(); } catch { }
+			try { ClientStream.Close(); } catch { }
+			Logger.WriteLine(" D connection to {0} closed.", RequestReal.RawUrl);
 		}
 	}
 }

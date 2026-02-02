@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -41,6 +42,21 @@ namespace WebOne
 		public static System.Net.Http.SocketsHttpHandler HTTPHandler = new();
 		public static System.Net.Http.HttpClient HTTPClient = new(HTTPHandler);
 		public static string LocalIP = "127.0.0.1"; //localhost IP or detected external IP
+
+		private static readonly ConcurrentDictionary<string, Regex> RegexCache = new();
+		private static readonly TimeSpan RegexTimeout = TimeSpan.FromSeconds(5);
+
+		/// <summary>
+		/// Get a cached compiled Regex instance, creating one if not already cached.
+		/// </summary>
+		/// <param name="pattern">The regex pattern.</param>
+		/// <param name="options">Optional regex options.</param>
+		/// <returns>A compiled Regex instance.</returns>
+		public static Regex GetCachedRegex(string pattern, RegexOptions options = RegexOptions.None)
+		{
+			string key = pattern + "|" + (int)options;
+			return RegexCache.GetOrAdd(key, _ => new Regex(pattern, options | RegexOptions.Compiled, RegexTimeout));
+		}
 
 		private const string DefaultPACheader = "function FindProxyForURL(url, host){\n";
 		private const string DefaultPAChttp = "if (url.substring(0, 5) == 'http:')\n{ return 'PROXY %PACProxy%'; }\n";
@@ -796,7 +812,7 @@ namespace WebOne
 		/// <param name="For">Pattern to find</param>
 		public static bool CheckStringRegExp(string What, string[] For)
 		{
-			foreach (string str in For) { if (System.Text.RegularExpressions.Regex.IsMatch(What, str)) return true; }
+			foreach (string str in For) { if (GetCachedRegex(str).IsMatch(What)) return true; }
 			return false;
 		}
 
@@ -807,7 +823,8 @@ namespace WebOne
 		/// <param name="For">Pattern to find</param>
 		public static bool CheckStringRegExp(string[] Where, string For)
 		{
-			foreach (string str in Where) { if (System.Text.RegularExpressions.Regex.IsMatch(str, For)) return true; }
+			var regex = GetCachedRegex(For);
+			foreach (string str in Where) { if (regex.IsMatch(str)) return true; }
 			return false;
 		}
 

@@ -396,7 +396,7 @@ namespace WebOne
 								foreach (string RqHdrName in ClientRequest.Headers.AllKeys)
 								{
 									string header = RqHdrName + ": " + ClientRequest.Headers[RqHdrName];
-									if (Regex.IsMatch(header, HdrMask))
+									if (GetCachedRegex(HdrMask).IsMatch(header))
 									{
 										HaveGoodMask = true;
 										EditSets.Add(set);
@@ -458,7 +458,7 @@ namespace WebOne
 						if (Set.IsForRequest)
 						{
 							//if URL mask is single, allow use RegEx groups (if any) for replace
-							bool UseRegEx = (Set.UrlMasks.Count == 1 && new Regex(Set.UrlMasks[0]).GetGroupNames().Count() > 1);
+							bool UseRegEx = (Set.UrlMasks.Count == 1 && GetCachedRegex(Set.UrlMasks[0]).GetGroupNames().Count() > 1);
 #if DEBUG
 							if (UseRegEx) Log.WriteLine(" RegExp groups are available on {0}.", Set.UrlMasks[0]);
 #endif
@@ -481,21 +481,20 @@ namespace WebOne
 										Dump(ClientRequest.HttpMethod + " " + ClientRequest.RawUrl + " HTTP/" + ClientRequest.ProtocolVersion.ToString());
 										break;
 									case "AddInternalRedirect":
-										string NewUrlInternal = UseRegEx ? ProcessUriMasks(new Regex(Set.UrlMasks[0]).Replace(RequestURL.AbsoluteUri, Edit.Value))
+										string NewUrlInternal = UseRegEx ? ProcessUriMasks(GetCachedRegex(Set.UrlMasks[0]).Replace(RequestURL.AbsoluteUri, Edit.Value))
 																		 : ProcessUriMasks(Edit.Value);
 										Log.WriteLine(" Fix to {0} internally", NewUrlInternal);
 										Dump("~Internal redirect to: " + NewUrlInternal);
 										RequestURL = new Uri(NewUrlInternal);
 										break;
 									case "AddRedirect":
-										//string NewUrl302 = UseRegEx ? ProcessUriMasks(new Regex(Set.UrlMasks[0]).Replace(RequestURL.AbsoluteUri, Edit.Value))
-										//							  : ProcessUriMasks(Edit.Value);
 										string NewUrl302 = "";
 										if (UseRegEx)
 										{
-											var match = new Regex(Set.UrlMasks[0]).Match(RequestURL.AbsoluteUri);
+											var regex = GetCachedRegex(Set.UrlMasks[0]);
+											var match = regex.Match(RequestURL.AbsoluteUri);
 											if (match.Groups.Count > 0)
-												NewUrl302 = ProcessUriMasks(new Regex(Set.UrlMasks[0]).Replace(match.Groups[0].Value, Edit.Value));
+												NewUrl302 = ProcessUriMasks(regex.Replace(match.Groups[0].Value, Edit.Value));
 											else NewUrl302 = ProcessUriMasks(Edit.Value);
 										}
 										else NewUrl302 = ProcessUriMasks(Edit.Value);
@@ -1750,7 +1749,7 @@ namespace WebOne
 							{
 								case "AddFindReplace":
 									FindReplaceEditSetRule frpair = Edit as FindReplaceEditSetRule;
-									Body = Regex.Replace(Body, frpair.Find, frpair.Replace, RegexOptions.Singleline);
+									Body = GetCachedRegex(frpair.Find, RegexOptions.Singleline).Replace(Body, frpair.Replace);
 									Dump("~~Find & replace (RegEx): " + frpair.Find + " -> " + frpair.Replace);
 									break;
 							}
