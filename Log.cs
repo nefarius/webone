@@ -12,7 +12,7 @@ namespace WebOne
 	static class LogAgent
 	{
 		static StreamWriter LogStreamWriter = null;
-		static bool LogStreamWriterReady = true;
+		static readonly object LogLock = new();
 
 		/// <summary>
 		/// Write a message to server log.
@@ -28,13 +28,13 @@ namespace WebOne
 				else Console.WriteLine(DisplayText);
 			if (Write && LogStreamWriter != null)
 			{
-				new Task(() =>
+				Task.Run(() =>
 				{
-					while (!LogStreamWriterReady) { }
-					LogStreamWriterReady = false;
-					LogStreamWriter.WriteLine(LogMessage);
-					LogStreamWriterReady = true;
-				}).Start();
+					lock (LogLock)
+					{
+						LogStreamWriter.WriteLine(LogMessage);
+					}
+				});
 				return;
 			}
 		}
