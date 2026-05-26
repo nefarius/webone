@@ -8,6 +8,7 @@
 		<Version>0.18.2</Version>
 		<VersionSuffix>-pre</VersionSuffix> <!--<VersionSuffix>-pre</VersionSuffix>-->
 		<PackageVersion>$(Version)$(VersionSuffix)</PackageVersion>
+		<InformationalVersion>$(PackageVersion)</InformationalVersion>
 		<Company>World</Company>
 		<Product>WebOne HTTP Proxy Server</Product>
 		<Description>HTTP 1.x proxy that makes old web browsers usable again in the Web 2.0 world.</Description>
@@ -43,6 +44,7 @@
 		<CopyOutputSymbolsToPublishDirectory>false</CopyOutputSymbolsToPublishDirectory>
 		<DebugType>None</DebugType>
 		<DebugSymbols>false</DebugSymbols>
+		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(RuntimeIdentifier)!='linux-armv6'">

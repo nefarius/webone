@@ -76,10 +76,9 @@ namespace WebOne
 		static void Main(string[] args)
 		{
 			Variables.Add("WOVer",
-			Assembly.GetExecutingAssembly().GetName().Version.Major + "." +
-			Assembly.GetExecutingAssembly().GetName().Version.Minor + "." +
-			Assembly.GetExecutingAssembly().GetName().Version.Build
-			+ "-pre"
+			Assembly.GetExecutingAssembly()?
+			.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
+			.InformationalVersion
 			);
 			Variables.Add("WOSystem", RuntimeInformation.OSDescription);
 
