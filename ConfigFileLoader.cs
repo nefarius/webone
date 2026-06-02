@@ -280,7 +280,9 @@ namespace WebOne
 									ConfigFile.MultipleHttp2Connections = ToBoolean(Option.Value);
 									break;
 								case "RemoteHttpVersion":
-									if (System.Text.RegularExpressions.Regex.IsMatch(Option.Value, @"([=><a])[u0-3][t\.][o0-9]"))
+									if (System.Text.RegularExpressions.Regex.IsMatch(Option.Value, @"[\d][\.][\d]"))
+									{ ConfigFile.RemoteHttpVersion = "=" + Option.Value; }
+									else if (System.Text.RegularExpressions.Regex.IsMatch(Option.Value, @"([=><a])[u0-3][t\.][o0-9]"))
 									{ ConfigFile.RemoteHttpVersion = Option.Value; }
 									else
 									{ Log.WriteLine(true, false, "Warning: Incorrect RemoteHttpVersion '{0}'.", Option.Value); }
