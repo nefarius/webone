@@ -128,6 +128,7 @@ namespace WebOne
 			}
 
 			//initialize system HTTP socket message handler for static HttpClient used by HttpOperation class instances
+			HTTPHandler.ConnectTimeout = new(0, 0, ConfigFile.ConnectionTimeout);
 			HTTPHandler.SslOptions.RemoteCertificateValidationCallback = CheckServerCertificate;
 			HTTPHandler.AllowAutoRedirect = false;
 			HTTPHandler.AutomaticDecompression = ConfigFile.AllowHttpCompression ? DecompressionMethods.All : DecompressionMethods.None;

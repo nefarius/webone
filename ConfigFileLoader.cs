@@ -313,6 +313,10 @@ namespace WebOne
 								case "DontPreferHTTPS":
 									ConfigFile.DontPreferHTTPS = ToBoolean(Option.Value);
 									break;
+								case "ConnectionTimeout":
+									if (!int.TryParse(Option.Value, out ConfigFile.ConnectionTimeout))
+										Log.WriteLine(true, false, "Warning: Incorrect ConnectionTimeout '{0}'.", Option.Value);
+									break;
 								default:
 									Log.WriteLine(true, false, "Warning: Unknown server option {0} in {1}.", Option.Key, Option.Location);
 									break;
