@@ -233,6 +233,11 @@ namespace WebOne
 		/// </summary>
 		public static bool DontPreferHTTPS = false;
 
+		/// <summary>
+		/// Timespan (seconds) to wait before the connection establishing times out
+		/// </summary>
+		public static int ConnectionTimeout = 100;
+
 
 
 		/// <summary>

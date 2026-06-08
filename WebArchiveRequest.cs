@@ -1,7 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.IO;
 
 namespace WebOne
 {
@@ -24,22 +24,26 @@ namespace WebOne
 			string CdxUrl = string.Format(
 			"https://web.archive.org/cdx/search/cdx?fl={0}&url={1}",
 			"timestamp,original,statuscode", //fields: ["urlkey","timestamp","original","mimetype","statuscode","digest","length"]
-		 	Uri.EscapeDataString(URL));
+			Uri.EscapeDataString(URL));
 			const int CdxFieldsCount = 3;
 
 			//send request to CDX server
-			var CdxResponse = new HttpClient().Send(new HttpRequestMessage(HttpMethod.Get,new Uri(CdxUrl)));
+			var CdxRequestMessage = new HttpRequestMessage(HttpMethod.Get, new Uri(CdxUrl));
+			CdxRequestMessage.Headers.Add("User-Agent", "WebOne/" + Program.Variables["WOVer"]);
+			var CdxResponse = new HttpClient().Send(CdxRequestMessage);
 			if (!CdxResponse.IsSuccessStatusCode) throw new Exception("Unsuccessful Web Archive request: " + CdxResponse.ReasonPhrase ?? " without reason");
 			string[] CdxBody = new StreamReader(CdxResponse.Content.ReadAsStream()).ReadToEnd().TrimEnd().Split('\n');
 
-			if(CdxBody.Length == 0){
+			if (CdxBody.Length == 0)
+			{
 				//not archived
 				Archived = false;
 				ArchivedURL = "";
 				return;
 			}
 
-			if(CdxBody[0] == string.Empty){
+			if (CdxBody[0] == string.Empty)
+			{
 				//not archived too
 				Archived = false;
 				ArchivedURL = "";
@@ -52,7 +56,7 @@ namespace WebOne
 			{
 				string[] Fields = CdxEntry.Split(" ");
 				if (Fields.Count() != CdxFieldsCount) continue;
-				if(ConfigFile.ArchiveDateLimit > 0)
+				if (ConfigFile.ArchiveDateLimit > 0)
 				{
 					long.TryParse(Fields[0], out long Timestamp);
 					if (Timestamp > ConfigFile.ArchiveDateLimit * (Math.Pow(10, 6))) continue;
@@ -62,7 +66,8 @@ namespace WebOne
 			if (LastCdxEntry == "") LastCdxEntry = CdxBody[^1];
 
 			string[] ResultFields = LastCdxEntry.Split(" ");
-			if(ResultFields.Count() != CdxFieldsCount){
+			if (ResultFields.Count() != CdxFieldsCount)
+			{
 				//bad CDX syntax
 				Archived = false;
 				ArchivedURL = "";
@@ -71,16 +76,16 @@ namespace WebOne
 
 			Archived = true;
 			ArchivedURL = string.Format("http://web.archive.org/web/{0}/{1}", ResultFields[0], ResultFields[1]);
-	}
+		}
 
-	/// <summary>
-	/// Is the requested URL archived by Wayback Machine
-	/// </summary>
-	public bool Archived { get; private set; }
+		/// <summary>
+		/// Is the requested URL archived by Wayback Machine
+		/// </summary>
+		public bool Archived { get; private set; }
 
-	/// <summary>
-	/// Address of archived copy of requested URL
-	/// </summary>
-	public string ArchivedURL { get; private set; }
+		/// <summary>
+		/// Address of archived copy of requested URL
+		/// </summary>
+		public string ArchivedURL { get; private set; }
 	}
 }

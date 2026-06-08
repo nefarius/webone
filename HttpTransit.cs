@@ -276,6 +276,7 @@ namespace WebOne
 				//if (LocalMode && ClientRequest.Headers["User-Agent"] != null && ClientRequest.Headers["User-Agent"].Contains("WebOne"))
 				if (ClientRequest.Headers["User-Agent"] != null && ClientRequest.Headers["User-Agent"].Contains("WebOne"))
 				{
+					if (SendInternalContent("Err-LoopRequest.htm", "", 403)) return;
 					SendError(403, "Loop requests are probhited.");
 					return;
 				}

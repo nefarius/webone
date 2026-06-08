@@ -76,10 +76,9 @@ namespace WebOne
 		static void Main(string[] args)
 		{
 			Variables.Add("WOVer",
-			Assembly.GetExecutingAssembly().GetName().Version.Major + "." +
-			Assembly.GetExecutingAssembly().GetName().Version.Minor + "." +
-			Assembly.GetExecutingAssembly().GetName().Version.Build
-			//+ "-pre"
+			Assembly.GetExecutingAssembly()?
+			.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
+			.InformationalVersion
 			);
 			Variables.Add("WOSystem", RuntimeInformation.OSDescription);
 
@@ -129,6 +128,7 @@ namespace WebOne
 			}
 
 			//initialize system HTTP socket message handler for static HttpClient used by HttpOperation class instances
+			HTTPHandler.ConnectTimeout = new(0, 0, ConfigFile.ConnectionTimeout);
 			HTTPHandler.SslOptions.RemoteCertificateValidationCallback = CheckServerCertificate;
 			HTTPHandler.AllowAutoRedirect = false;
 			HTTPHandler.AutomaticDecompression = ConfigFile.AllowHttpCompression ? DecompressionMethods.All : DecompressionMethods.None;

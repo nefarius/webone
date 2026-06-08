@@ -280,7 +280,9 @@ namespace WebOne
 									ConfigFile.MultipleHttp2Connections = ToBoolean(Option.Value);
 									break;
 								case "RemoteHttpVersion":
-									if (System.Text.RegularExpressions.Regex.IsMatch(Option.Value, @"([=><a])[u0-3][t\.][o0-9]"))
+									if (System.Text.RegularExpressions.Regex.IsMatch(Option.Value, @"[\d][\.][\d]"))
+									{ ConfigFile.RemoteHttpVersion = "=" + Option.Value; }
+									else if (System.Text.RegularExpressions.Regex.IsMatch(Option.Value, @"([=><a])[u0-3][t\.][o0-9]"))
 									{ ConfigFile.RemoteHttpVersion = Option.Value; }
 									else
 									{ Log.WriteLine(true, false, "Warning: Incorrect RemoteHttpVersion '{0}'.", Option.Value); }
@@ -312,6 +314,10 @@ namespace WebOne
 									break;
 								case "DontPreferHTTPS":
 									ConfigFile.DontPreferHTTPS = ToBoolean(Option.Value);
+									break;
+								case "ConnectionTimeout":
+									if (!int.TryParse(Option.Value, out ConfigFile.ConnectionTimeout))
+										Log.WriteLine(true, false, "Warning: Incorrect ConnectionTimeout '{0}'.", Option.Value);
 									break;
 								default:
 									Log.WriteLine(true, false, "Warning: Unknown server option {0} in {1}.", Option.Key, Option.Location);
