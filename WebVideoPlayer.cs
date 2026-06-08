@@ -53,6 +53,7 @@ namespace WebOne
 			Page.HttpStatusCode = 302;
 			Page.HttpHeaders.Add("Location", "/rovp-" + PlayerType + ".htm");
 			if (VideoUrl != "/!webvideo/?") Page.HttpHeaders["Location"] += "?VideoUrl=" + HttpUtility.UrlEncode(VideoUrl);
+			if (PlayerType == "html5") Page.HttpHeaders["Location"] += "&JsonUrl=" + HttpUtility.UrlEncode("/!webvideo/?&dump-json=&url=" + Parameters["url"] + "&no-warnings=&quiet=");
 			return;
 
 			/* Notes about HTML-based players.

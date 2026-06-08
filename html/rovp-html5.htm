@@ -1,8 +1,40 @@
 ﻿<html>
+<head>
 <title>Video player - HTML5</title>
 <meta charset="utf-8"/>
 <style type='text/css'>html, body { border-style: none; } </style>
+</head>
 <body>
-<center><video id='MediaPlayer' src='%VideoUrl%' controls='yes' autoplay='yes' style='width: 100%; height: 100%;'>Try another player type, as HTML5 is not supported.</video></center>
+<center><video id='MediaPlayer' src='%VideoUrl%' controls='yes' autoplay='yes' style='width: 70%;'>Try another player type, as HTML5 is not supported.</video></center>
+<center id="InfoBar"></center>
+
+<script>
+var getJSON = function(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.responseType = 'json';
+    xhr.onload = function() {
+      var status = xhr.status;
+      if (status === 200) {
+        callback(null, xhr.response);
+      } else {
+        callback(status, xhr.response);
+      }
+    };
+    xhr.send();
+   document.getElementById('InfoBar').innerHTML = '<p>Loading description...</p>';
+};
+
+getJSON('%JsonUrl%',
+function(err, data) {
+  document.getElementById('InfoBar').innerHTML = '';
+  if (err !== null) {
+    document.getElementById('InfoBar').innerHTML = '<p>No details: ' + err + '</p>';
+  } else {
+    document.getElementById('InfoBar').innerHTML = '<h2>' + data.fulltitle + '</h2>';
+    document.getElementById('InfoBar').innerHTML += '<p>Uploaded on ' + data.upload_date + ' by ' + data.uploader + '</p>';
+  }
+});
+</script>
 </body>
 </html>
